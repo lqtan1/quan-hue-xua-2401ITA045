@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 export default function FormDatMon({ onGui, choPhepGui = false }) {
-  // TODO C4.1: State cho họ tên, số điện thoại, ghi chú và state lỗi
   const [formData, setFormData] = useState({
     hoTen: '',
     soDienThoai: '',
@@ -13,9 +12,15 @@ export default function FormDatMon({ onGui, choPhepGui = false }) {
     soDienThoai: '',
   });
 
-  // TODO C3.4: Trong FormDatMon.jsx dùng useRef và useEffect để ô "Họ tên" tự có con trỏ mỗi khi form vừa hiện
+  // C3.4: Dùng useRef và useEffect để ô "Họ tên" tự có con trỏ mỗi khi form vừa hiện
+  const hoTenInputRef = useRef(null);
 
-  // Hàm kiểm tra hợp lệ đã viết sẵn
+  useEffect(() => {
+    if (hoTenInputRef.current) {
+      hoTenInputRef.current.focus();
+    }
+  }, []);
+
   const kiemTra = (name, value) => {
     const valTrim = value.trim();
     if (name === 'hoTen') {
@@ -28,7 +33,11 @@ export default function FormDatMon({ onGui, choPhepGui = false }) {
     return '';
   };
 
-  // TODO C4.1: Kiểm tra từng ô khi rời ô (onBlur) và kiểm tra cả hai ô khi gửi (onSubmit)
+  const xuLyThayDoi = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const xuLyGui = (e) => {
     e.preventDefault();
   };
@@ -39,13 +48,18 @@ export default function FormDatMon({ onGui, choPhepGui = false }) {
         <label htmlFor="hoTen">Họ tên</label>
         <input
           id="hoTen"
+          ref={hoTenInputRef}
           type="text"
           name="hoTen"
           value={formData.hoTen}
-          onChange={(e) => setFormData({ ...formData, hoTen: e.target.value })}
+          onChange={xuLyThayDoi}
           placeholder="Nhập họ và tên..."
         />
-        {loi.hoTen && <p className="loi" role="alert">{loi.hoTen}</p>}
+        {loi.hoTen && (
+          <p className="loi" role="alert">
+            {loi.hoTen}
+          </p>
+        )}
       </div>
 
       <div className="form-group">
@@ -55,10 +69,14 @@ export default function FormDatMon({ onGui, choPhepGui = false }) {
           type="tel"
           name="soDienThoai"
           value={formData.soDienThoai}
-          onChange={(e) => setFormData({ ...formData, soDienThoai: e.target.value })}
+          onChange={xuLyThayDoi}
           placeholder="Ví dụ: 0912345678"
         />
-        {loi.soDienThoai && <p className="loi" role="alert">{loi.soDienThoai}</p>}
+        {loi.soDienThoai && (
+          <p className="loi" role="alert">
+            {loi.soDienThoai}
+          </p>
+        )}
       </div>
 
       <div className="form-group">
@@ -68,12 +86,11 @@ export default function FormDatMon({ onGui, choPhepGui = false }) {
           name="ghiChu"
           rows={3}
           value={formData.ghiChu}
-          onChange={(e) => setFormData({ ...formData, ghiChu: e.target.value })}
+          onChange={xuLyThayDoi}
           placeholder="Yêu cầu thêm..."
         />
       </div>
 
-      {/* TODO C4.3: Nút "Gửi đơn" chỉ bấm được khi choPhepGui = true */}
       <button type="submit" className="btn-gui-don" disabled={!choPhepGui}>
         Gửi đơn
       </button>

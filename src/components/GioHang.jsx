@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { dinhDangGia } from '../utils/dinhDangGia';
 
-// C2.2: Hiển thị danh sách giỏ hàng
+// C3.1: Component Giỏ hàng
 export default function GioHang({ gio = [], dsMon = [] }) {
-  // TODO C3.1: Sẽ tối ưu tongTien bằng useMemo ở Câu 3
-  const tongTien = gio.reduce((tong, item) => {
-    const mon = dsMon.find((m) => m.id === item.id);
-    return tong + (mon ? mon.gia * item.soLuong : 0);
-  }, 0);
+  // C3.1: Tính tongTien bằng useMemo, chỉ tính lại khi gio hoặc dsMon đổi
+  const tongTien = useMemo(() => {
+    return gio.reduce((tong, item) => {
+      const mon = dsMon.find((m) => m.id === item.id);
+      return tong + (mon ? mon.gia * item.soLuong : 0);
+    }, 0);
+  }, [gio, dsMon]);
 
   return (
     <div className="gio-hang-box" data-testid="gio-hang">
-      {/* Khi giỏ rỗng hiện "Giỏ hàng trống" thay cho danh sách */}
+      {/* C3.1: Khi giỏ rỗng hiện đúng chữ "Giỏ hàng trống" */}
       {gio.length === 0 ? (
         <p className="gio-hang-trong">Giỏ hàng trống</p>
       ) : (
