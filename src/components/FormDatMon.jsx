@@ -1,36 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
+// C3.4, C4.1, C4.3: Hoàn thiện FormDatMon thành biểu mẫu có kiểm soát
 export default function FormDatMon({ onGui, choPhepGui = false }) {
-  // TODO C4.1: State cho họ tên, số điện thoại, ghi chú và state lỗi
+  // C4.1: State cho họ tên, số điện thoại, ghi chú
   const [formData, setFormData] = useState({
     hoTen: '',
     soDienThoai: '',
     ghiChu: '',
   });
 
+  // C4.1: State lỗi
   const [loi, setLoi] = useState({
     hoTen: '',
     soDienThoai: '',
   });
 
-  // TODO C3.4: Trong FormDatMon.jsx dùng useRef và useEffect để ô "Họ tên" tự có con trỏ mỗi khi form vừa hiện
+  // C3.4: Dùng useRef và useEffect để ô "Họ tên" tự có con trỏ mỗi khi form vừa hiện
+  const hoTenInputRef = useRef(null);
 
-  // Hàm kiểm tra hợp lệ đã viết sẵn
+  useEffect(() => {
+    if (hoTenInputRef.current) {
+      hoTenInputRef.current.focus();
+    }
+  }, []);
+
+  // Hàm kiểm tra hợp lệ
   const kiemTra = (name, value) => {
     const valTrim = value.trim();
     if (name === 'hoTen') {
-      return valTrim.length < 2 ? 'Họ tên cần ít nhất 2 ký tự' : '';
+      if (valTrim.length < 2) {
+        return 'Họ tên cần ít nhất 2 ký tự';
+      }
+      return '';
     }
+
     if (name === 'soDienThoai') {
       const regexSDT = /^0\d{9}$/;
-      return !regexSDT.test(valTrim) ? 'Số điện thoại gồm 10 chữ số, bắt đầu bằng 0' : '';
+      if (!regexSDT.test(valTrim)) {
+        return 'Số điện thoại gồm 10 chữ số, bắt đầu bằng 0';
+      }
+      return '';
     }
+
     return '';
   };
 
-  // TODO C4.1: Kiểm tra từng ô khi rời ô (onBlur) và kiểm tra cả hai ô khi gửi (onSubmit)
+  // Cập nhật state dữ liệu qua e.target.name và e.target.value
+  const xuLyThayDoi = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // C4.1: Kiểm tra từng ô khi rời ô (onBlur)
+  const xuLyBlur = (e) => {
+    const { name, value } = e.target;
+    const thongBaoLoi = kiemTra(name, value);
+    setLoi((prev) => ({
+      ...prev,
+      [name]: thongBaoLoi,
+    }));
+  };
+
+  // C4.1: Kiểm tra cả hai ô khi gửi (onSubmit)
   const xuLyGui = (e) => {
     e.preventDefault();
+
+    const loiHoTen = kiemTra('hoTen', formData.hoTen);
+    const loiSDT = kiemTra('soDienThoai', formData.soDienThoai);
+
+    setLoi({
+      hoTen: loiHoTen,
+      soDienThoai: loiSDT,
+    });
+
+    // Gửi khi còn lỗi: chặn tải lại trang và KHÔNG gọi onGui
+    if (loiHoTen || loiSDT) {
+      return;
+    }
+
+    // Gửi hợp lệ: gọi onGui({ hoTen, soDienThoai, ghiChu }) với giá trị đã cắt khoảng trắng hai đầu
+    if (onGui) {
+      onGui({
+        hoTen: formData.hoTen.trim(),
+        soDienThoai: formData.soDienThoai.trim(),
+        ghiChu: formData.ghiChu.trim(),
+      });
+    }
   };
 
   return (
@@ -39,13 +97,20 @@ export default function FormDatMon({ onGui, choPhepGui = false }) {
         <label htmlFor="hoTen">Họ tên</label>
         <input
           id="hoTen"
+          ref={hoTenInputRef}
           type="text"
           name="hoTen"
           value={formData.hoTen}
-          onChange={(e) => setFormData({ ...formData, hoTen: e.target.value })}
+          onChange={xuLyThayDoi}
+          onBlur={xuLyBlur}
           placeholder="Nhập họ và tên..."
         />
-        {loi.hoTen && <p className="loi" role="alert">{loi.hoTen}</p>}
+        {/* Lỗi hiện dưới ô tương ứng trong <p className="loi" role="alert"> */}
+        {loi.hoTen && (
+          <p className="loi" role="alert">
+            {loi.hoTen}
+          </p>
+        )}
       </div>
 
       <div className="form-group">
@@ -55,10 +120,16 @@ export default function FormDatMon({ onGui, choPhepGui = false }) {
           type="tel"
           name="soDienThoai"
           value={formData.soDienThoai}
-          onChange={(e) => setFormData({ ...formData, soDienThoai: e.target.value })}
+          onChange={xuLyThayDoi}
+          onBlur={xuLyBlur}
           placeholder="Ví dụ: 0912345678"
         />
-        {loi.soDienThoai && <p className="loi" role="alert">{loi.soDienThoai}</p>}
+        {/* Lỗi hiện dưới ô tương ứng trong <p className="loi" role="alert"> */}
+        {loi.soDienThoai && (
+          <p className="loi" role="alert">
+            {loi.soDienThoai}
+          </p>
+        )}
       </div>
 
       <div className="form-group">
@@ -68,13 +139,17 @@ export default function FormDatMon({ onGui, choPhepGui = false }) {
           name="ghiChu"
           rows={3}
           value={formData.ghiChu}
-          onChange={(e) => setFormData({ ...formData, ghiChu: e.target.value })}
+          onChange={xuLyThayDoi}
           placeholder="Yêu cầu thêm..."
         />
       </div>
 
-      {/* TODO C4.3: Nút "Gửi đơn" chỉ bấm được khi choPhepGui = true */}
-      <button type="submit" className="btn-gui-don" disabled={!choPhepGui}>
+      {/* C4.3: Nút "Gửi đơn" chỉ bấm được khi choPhepGui = true */}
+      <button
+        type="submit"
+        className="btn-gui-don"
+        disabled={!choPhepGui}
+      >
         Gửi đơn
       </button>
     </form>

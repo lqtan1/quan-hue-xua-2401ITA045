@@ -1,9 +1,10 @@
 import React from 'react';
 
+// C1.1: Header đọc tên quán từ biến môi trường import.meta.env.VITE_TEN_QUAN
+// Quy ước: export default, tên quán nằm trong thẻ <h1>, số phần trong giỏ nằm trong thẻ có data-testid="tong-phan"
 export default function Header({ tongPhan = 0 }) {
-  // TODO C1.1: Đọc tên quán từ biến môi trường import.meta.env.VITE_TEN_QUAN
-  // Hiển thị trong thẻ <h1>, không được viết cứng tên quán trong mã
-  const tenQuan = 'Quán Ăn';
+  // Đọc tên quán qua biến môi trường Vite, không viết cứng trong mã
+  const tenQuan = import.meta.env.VITE_TEN_QUAN;
 
   return (
     <header className="header-quan">
