@@ -5,10 +5,10 @@
 ---
 
 ### THÔNG TIN SINH VIÊN
-- **Họ và tên:** 
-- **Mã số sinh viên (MSSV):** 
-- **Lớp / số máy:** 
-- **Nhánh làm bài:** `giuaky/<MSSV>`
+- **Họ và tên:** Lê Quang Tấn
+- **Mã số sinh viên (MSSV):** 2401ITA045
+- **Lớp:** CNTT
+- **Nhánh làm bài:** `giuaky/2401ITA045`
 
 ---
 
@@ -25,5 +25,5 @@
 ---
 
 ### KHAI BÁO SỬ DỤNG AI
-- **Có sử dụng công cụ AI (ChatGPT, Copilot, Claude...) hay không:** 
-- **Cam kết:** Bài làm là mã nguồn do chính sinh viên tự viết theo quy định thi.
+- **Có sử dụng công cụ AI (ChatGPT, Copilot, Claude...) hay không:** ...
+- **Cam kết:** Sẽ khai báo trung thực chi tiết sau khi hoàn thành toàn bộ bài thi.
