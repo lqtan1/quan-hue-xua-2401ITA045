@@ -31,7 +31,7 @@
   - Tra cứu cú pháp biểu thức chính quy (Regex) kiểm tra số điện thoại 10 chữ số bắt đầu bằng 0 (`/^0\d{9}$/`) phục vụ kiểm chứng biểu mẫu.
   - Tham khảo cách bọc `try...catch` an toàn trong khởi tạo lười (lazy initialization: `useState(() => ...)`) của custom hook `useLocalStorage` để phòng ngừa lỗi phân tích JSON khi dữ liệu bộ nhớ cục bộ bị hỏng.
   - Tra cứu phương thức `e.stopPropagation()` nhằm ngăn chặn hiện tượng nổi bọt sự kiện (event bubbling) khi bấm nút "Đặt món" bên trong thẻ món ăn.
-- **Cam kết:** Toàn bộ kiến thức nền tảng, thiết kế cây thành phần, kỹ thuật nâng trạng thái (lifting state up), logic giỏ hàng và xử lý biểu mẫu đều do sinh viên tự tay lập trình và nắm vững. Sinh viên hoàn toàn hiểu rõ bản chất từng dòng mã và sẵn sàng trả lời trực tiếp toàn bộ câu hỏi vấn đáp của giảng viên.
+- **Cam kết:** Em đã nỗ lực tự hoàn thiện khung bài và tự gõ mã nguồn. Những phần có tham khảo tra cứu cú pháp em đã đọc kỹ lại để nắm cách hoạt động cơ bản, và sẽ cố gắng giải thích rõ bài làm của mình nếu được thầy hỏi vấn đáp.
 
 ---
 
